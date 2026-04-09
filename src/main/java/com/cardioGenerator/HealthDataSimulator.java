@@ -25,6 +25,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * Simulates real-time health data generation for multiple patients.
+ *
+ * This class serves as the main entry point for the health data simulation system.
+ * It initializes patient data generators, configures the output strategy, and
+ * schedules periodic tasks to simulate continuous data streams.
+ *
+ * This class is executed as a standalone application. It accepts command-line
+ * arguments to configure the number of patients and the output method. Based on
+ * these parameters, it initializes the simulation and continuously generates
+ * data for each patient
+ * 
+ * @author Melanie Böhmer 
+ */
+
 public class HealthDataSimulator {
 
     private static int patientCount = 50; // Default number of patients
@@ -43,7 +58,7 @@ public class HealthDataSimulator {
 
         scheduleTasksForPatients(patientIds);
     }
-
+    // according to the Google Java Style private function do not need a javaDoc documentation especially if the functions are a self explanitory as the following  
     private static void parseArguments(String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
