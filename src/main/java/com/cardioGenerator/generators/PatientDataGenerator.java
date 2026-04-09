@@ -1,4 +1,4 @@
-package com.cardio_generator.generators;
+package com.cardioGenerator.generators;
 
 import com.cardio_generator.outputs.OutputStrategy;
 

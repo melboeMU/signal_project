@@ -13,8 +13,9 @@ class DataStorageTest {
     @Test
     void testAddAndGetRecords() {
         // TODO Perhaps you can implement a mock data reader to mock the test data?
+        // the contructor of dataStorage has no arguments anyway so we can just leave out the reader ans adds the data directly
         // DataReader reader
-        DataStorage storage = new DataStorage(reader);
+        DataStorage storage = new DataStorage(/*reader*/);
         storage.addPatientData(1, 100.0, "WhiteBloodCells", 1714376789050L);
         storage.addPatientData(1, 200.0, "WhiteBloodCells", 1714376789051L);
 
