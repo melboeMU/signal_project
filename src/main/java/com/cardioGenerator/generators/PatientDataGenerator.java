@@ -1,6 +1,6 @@
 package com.cardioGenerator.generators;
 
-import com.cardio_generator.outputs.OutputStrategy;
+import com.cardioGenerator.outputs.OutputStrategy;
 
 /**
  * Defines a contract for generating simulated patient data.

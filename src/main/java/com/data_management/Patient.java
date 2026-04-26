@@ -23,6 +23,13 @@ public class Patient {
         this.patientId = patientId;
         this.patientRecords = new ArrayList<>();
     }
+    
+    /**returns the patients ID 
+     * @return the unique identifier of the patient
+     */
+    public int getPatientId() {
+        return patientId;
+    }
 
     /**
      * Adds a new record to this patient's list of medical records.
@@ -52,7 +59,6 @@ public class Patient {
      *         range
      */
     public List<PatientRecord> getRecords(long startTime, long endTime) {
-        //TODO test 
         List<PatientRecord> filteredRecords = new ArrayList<>();
 
         for (PatientRecord record : this.patientRecords) {
