@@ -16,9 +16,7 @@ public interface OutputStrategy {
      * @param timestamp the time at which the data was generated
      * @param label the type or category of the data (e.g., "HeartRate", "Saturation")
      * @param data the value of the measurement
-     * @return This method does not return a value.
      * @throws NullPointerException if any required parameter is null depending on the implementation
-     * 
      */
     void output(int patientId, long timestamp, String label, String data);
 }

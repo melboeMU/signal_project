@@ -8,9 +8,7 @@ import com.cardioGenerator.outputs.OutputStrategy;
  * this calss Generates simulated blood oxygen saturation data for multiple patients.
  * Each patient is assigned an initial baseline saturation value between a valid range of 90% and 100%.
  * theState is maintained internally for each patient, meaning that each patient's saturation
- * evolves over time based on previously generated values.
- *
- * This class is intended to be used as part of a patient data simulation pipeline.
+ * evolves over time based on previously generated values.This class is intended to be used as part of a patient data simulation pipeline.
  * 
  * @author Melanie Böhmer 
  */
@@ -35,10 +33,8 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
  *
  * @param patientId the unique identifier of the patient as a number 
  * @param outputStrategy the output mechanism used to show the generated data
- * @return This method does not return a value.
  * @throws ArrayIndexOutOfBoundsException if patientId is outside the valid range
  * @throws NullPointerException if outputStrategy is null
- *
  */
     @Override
     public void generate(int patientId, OutputStrategy outputStrategy) {

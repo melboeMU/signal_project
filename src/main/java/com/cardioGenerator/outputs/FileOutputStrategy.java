@@ -1,4 +1,4 @@
-package com.cardioGenerator.outputs;//package name changed to lowerCamelCase
+package com.cardioGenerator.outputs; //package name changed to lowerCamelCase
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,16 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class implements the OutputStrategy interface to write generated patient data to files on the local file system.
- * persist patient data into text files.
- *
- * This class is used as part of the data simulation pipeline to store generated patient
+ * persist patient data into text files.This class is used as part of the data simulation pipeline to store generated patient
  * data persistently.
  * 
  * @author Melanie Böhmer 
  */
-
 public class FileOutputStrategy implements OutputStrategy {
-
     private String baseDirectory;//name chaneged to lowerCamelCase for variable declaration
 
     // Changed variable name to camelCase instead of underscore (no real constant so no all uppercase needed)
@@ -29,7 +25,6 @@ public class FileOutputStrategy implements OutputStrategy {
      *
      * @param baseDirectory the directory where output files will be stored;
      * @throws NullPointerException if {@code baseDirectory} is {@code null}
-     
      */
     public FileOutputStrategy(String baseDirectory) {
         //change to lowerCamelCase style as in line 12 
@@ -44,13 +39,9 @@ public class FileOutputStrategy implements OutputStrategy {
      * @param timestamp the time of the measurement in milliseconds 
      * @param label the category of the data (e.g., "HeartRate", "Saturation");also used as the file name
      * @param data the measurement value as a string
-     *
-     * @return This method does not return a value. The data is written directly to a file.
-     *
      * @throws NullPointerException if {@code label} or {@code data} is {@code null}
      */
-
-    @Override 
+    @Override
     public void output(int patientId, long timestamp, String label, String data) {
         try {
             // Create the directory
@@ -62,7 +53,7 @@ public class FileOutputStrategy implements OutputStrategy {
         }
         // Set the FilePath variable
         // Changed variable name Filepath and file_map and BaseDirectory to lowerCamelCase
-        //added  breaks at a higher syntactic level
+        // added  breaks at a higher syntactic level
         String filePath = fileMap.computeIfAbsent(
                                 label,
                                 k -> Paths.get(baseDirectory, label + ".txt").toString()

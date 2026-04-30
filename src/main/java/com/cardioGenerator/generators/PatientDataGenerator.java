@@ -3,8 +3,7 @@ package com.cardioGenerator.generators;
 import com.cardioGenerator.outputs.OutputStrategy;
 
 /**
- * Defines a contract for generating simulated patient data.
- *
+ * Defines a contract for generating simulated patient data
  * This interface represents a generic data generator within the health data
  * simulation system. it is used by the simulation engine to invoke data generation
  * for each patient. 
@@ -20,8 +19,6 @@ public interface PatientDataGenerator {
      *
      * @param patientId the unique identifier of the patient
      * @param outputStrategy the output mechanism used to handle the generated data
-     *                   
-     * @return This method does not return a value. 
      */
     void generate(int patientId, OutputStrategy outputStrategy);
 }

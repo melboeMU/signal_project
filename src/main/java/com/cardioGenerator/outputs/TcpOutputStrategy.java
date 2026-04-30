@@ -7,8 +7,7 @@ import java.net.Socket;
 import java.util.concurrent.Executors;
 
 /**
- * Sends patient data over a TCP connection to a connected client.
- *
+ * Sends patient data over a TCP connection to a connected client
  * This class is intended to be used as an output strategy in the data simulation system.
  * It allows external systems to receive real-time patient data via a TCP connection. 
  * 
@@ -25,7 +24,6 @@ public class TcpOutputStrategy implements OutputStrategy {
      *
      * @param port the port number on which the TCP server will listen;
      * @throws IllegalArgumentException if the port number is outside the valid range
-     *
      */
     public TcpOutputStrategy(int port) {
         try {
@@ -56,9 +54,6 @@ public class TcpOutputStrategy implements OutputStrategy {
      * @param timestamp the time of the measurement
      * @param label the type of data being sent (e.g."Saturation")
      * @param data the actual measurement value
-     *
-     * @return This method does not return a value.
-     *
      * @throws IllegalStateException if the output stream is not initialized (i.e., no client connected)
      */
     @Override
