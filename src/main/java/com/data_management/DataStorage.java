@@ -13,21 +13,35 @@ import com.alerts.AlertGenerator;
  * patient IDs.
  */
 public class DataStorage {
-    private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
+    private static DataStorage instance;
+
+    private Map<Integer, Patient> patientMap;
 
     /**
-     * Constructs a new instance of DataStorage, initializing the underlying storage
-     * structure.
+     * Constructs a DataStorage instance.(singelton pattern)
+     * Private to prevent direct object creation from outside the class.
      */
-    public DataStorage() {
+    private DataStorage() {
         this.patientMap = new HashMap<>();
+    }
+
+    /**
+     * Returns the single DataStorage instance.
+     *
+     * @return the singleton DataStorage instance
+     */
+    public static DataStorage getInstance() {
+        if (instance == null) {
+            instance = new DataStorage();
+        }
+        return instance;
     }
 
     /**
      * Adds or updates patient data in the storage.
      * If the patient does not exist, a new Patient object is created and added to
      * the storage.
-     * Otherwise, the new data is added to the existing patient's records.
+     * Otherwise, the new data is added to the existing patient's reco rds.
      *
      * @param patientId        the unique identifier of the patient
      * @param measurementValue the value of the health metric being recorded
@@ -85,7 +99,7 @@ public class DataStorage {
     public static void main(String[] args) {
         // DataReader is not defined in this scope, should be initialized appropriately.
         // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
 
         // Assuming the reader has been properly initialized and can read data into the
         // storage
@@ -107,5 +121,14 @@ public class DataStorage {
         for (Patient patient : storage.getAllPatients()) {
             alertGenerator.evaluateData(patient);
         }
+    }
+    /**
+     * Clears all stored patient data.
+     * 
+     * This method is mainly used for testing because DataStorage
+     * is implemented as a Singleton and persists data between tests.
+     */
+    public void clear() {
+        patientMap.clear();
     }
 }

@@ -44,17 +44,49 @@ public class HealthDataSimulator {
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
     private static final Random random = new Random();
 
-    public static void main(String[] args) throws IOException {
+    private static HealthDataSimulator instance;
 
+    /**
+     * Constructs a HealthDataSimulator instance.
+     * Private to prevent direct object creation from outside the class.
+     */
+    private HealthDataSimulator() {
+    }
+
+    /**
+     * Returns the single HealthDataSimulator instance.
+     *
+     * @return the singleton HealthDataSimulator instance
+     */
+    public static HealthDataSimulator getInstance() {
+        if (instance == null) {
+            instance = new HealthDataSimulator();
+        }
+        return instance;
+    }
+
+    public static void main(String[] args) throws IOException {
+        HealthDataSimulator simulator = HealthDataSimulator.getInstance();
+        simulator.start(args);
+    }
+
+    /**
+     * Starts the health data simulation.
+     *
+     * @param args command line arguments
+     * @throws IOException if output directories cannot be created
+     */
+    public void start(String[] args) throws IOException {
         parseArguments(args);
 
         scheduler = Executors.newScheduledThreadPool(patientCount * 4);
 
         List<Integer> patientIds = initializePatientIds(patientCount);
-        Collections.shuffle(patientIds); // Randomize the order of patient IDs
+        Collections.shuffle(patientIds);
 
         scheduleTasksForPatients(patientIds);
     }
+
     // according to the Google Java Style private function do not need a javaDoc documentation especially if the functions are a self explanitory as the following  
     private static void parseArguments(String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {

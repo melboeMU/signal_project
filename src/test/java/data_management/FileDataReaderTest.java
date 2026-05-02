@@ -1,6 +1,8 @@
 package data_management;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.data_management.DataStorage;
@@ -14,6 +16,14 @@ import java.nio.file.Path;
 
 class FileDataReaderTest {
 
+    private DataStorage storage;
+
+    @BeforeEach
+    void setUp() {
+        storage = DataStorage.getInstance();
+        storage.clear();
+    }
+
     @Test
     void shouldReadSingleFileAndStoreAllMeasurements() throws IOException {
         Path tempDir = Files.createTempDirectory("reader-test");
@@ -23,7 +33,6 @@ class FileDataReaderTest {
                 "1713772800000,1,HeartRate,78.0\n" +
                 "1713772860000,1,BloodPressure,120.0\n");
 
-        DataStorage storage = new DataStorage();
         FileDataReader reader = new FileDataReader(tempDir);
 
         reader.readData(storage);
@@ -48,8 +57,7 @@ class FileDataReaderTest {
                 "timestamp,patientId,recordType,measurementValue\n" +
                 "1713772860000,2,HeartRate,90.0\n");
 
-        DataStorage storage = new DataStorage();
-        FileDataReader reader = new FileDataReader(tempDir);
+        FileDataReader reader = new FileDataReader(tempDir); 
 
         reader.readData(storage);
 
@@ -69,7 +77,6 @@ class FileDataReaderTest {
                 "1713772800000,1,HeartRate,78.0\n" +
                 "\n");
 
-        DataStorage storage = new DataStorage();
         FileDataReader reader = new FileDataReader(tempDir);
 
         reader.readData(storage);
@@ -88,7 +95,6 @@ class FileDataReaderTest {
             throw new RuntimeException(e);
         }
         Path missingDir = tempDir.resolve("does_not_exist");
-        DataStorage storage = new DataStorage();
         FileDataReader reader = new FileDataReader(missingDir);
 
         assertThrows(IOException.class, () -> reader.readData(storage));
@@ -101,7 +107,6 @@ class FileDataReaderTest {
                 "timestamp,patientId,recordType,measurementValue\n" +
                 "1713772800000,1,HeartRate\n");
 
-        DataStorage storage = new DataStorage();
         FileDataReader reader = new FileDataReader(tempDir);
 
         assertThrows(IOException.class, () -> reader.readData(storage));
@@ -114,7 +119,6 @@ class FileDataReaderTest {
                 "timestamp,patientId,recordType,measurementValue\n" +
                 "2026-04-22T10:15:30,1,HeartRate,77.0\n");
 
-        DataStorage storage = new DataStorage();
         FileDataReader reader = new FileDataReader(tempDir);
 
         reader.readData(storage);
