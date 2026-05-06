@@ -19,8 +19,11 @@ public class WebSocketOutputStrategy implements OutputStrategy {
     public void output(int patientId, long timestamp, String label, String data) {
         String message = String.format("%d,%d,%s,%s", patientId, timestamp, label, data);
         // Broadcast the message to all connected clients
+        // This avoids errors if a client disconnects while data is being sent.
         for (WebSocket conn : server.getConnections()) {
-            conn.send(message);
+            if (conn != null && conn.isOpen()) {
+                conn.send(message);
+            }
         }
     }
 

@@ -1,10 +1,10 @@
 package com.data_management;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
@@ -15,14 +15,14 @@ import com.alerts.AlertGenerator;
 public class DataStorage {
     private static DataStorage instance;
 
-    private Map<Integer, Patient> patientMap;
+    private final Map<Integer, Patient> patientMap;
 
     /**
      * Constructs a DataStorage instance.(singelton pattern)
      * Private to prevent direct object creation from outside the class.
      */
     private DataStorage() {
-        this.patientMap = new HashMap<>();
+        this.patientMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -51,12 +51,16 @@ public class DataStorage {
      *                         milliseconds since the Unix epoch
      */
     public void addPatientData(int patientId, double measurementValue, String recordType, long timestamp) {
-        Patient patient = patientMap.get(patientId);
-        if (patient == null) {
-            patient = new Patient(patientId);
-            patientMap.put(patientId, patient);
+
+        // computeIfAbsent prevents duplicate Patient objects from being created
+        // when multiple WebSocket messages arrive at nearly the same time.
+        Patient patient = patientMap.computeIfAbsent(patientId, Patient::new);
+
+        // Synchronizing on the patient protects the patient's internal record list
+        // from concurrent updates.
+        synchronized (patient) {
+            patient.addRecord(measurementValue, recordType, timestamp);
         }
-        patient.addRecord(measurementValue, recordType, timestamp);
     }
 
     /**
@@ -75,7 +79,10 @@ public class DataStorage {
     public List<PatientRecord> getRecords(int patientId, long startTime, long endTime) {
         Patient patient = patientMap.get(patientId);
         if (patient != null) {
-            return patient.getRecords(startTime, endTime);
+            // Synchronization prevents reading records while another thread is adding one.
+            synchronized (patient) {
+                return patient.getRecords(startTime, endTime);
+            }
         }
         return new ArrayList<>(); // return an empty list if no patient is found
     }
