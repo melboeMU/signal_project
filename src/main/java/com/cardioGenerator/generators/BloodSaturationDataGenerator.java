@@ -2,6 +2,7 @@ package com.cardioGenerator.generators;
 
 import java.util.Random;
 import com.cardioGenerator.outputs.OutputStrategy;
+import com.data_management.RecordLabels;
 
 
 /**
@@ -46,7 +47,7 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
             // Ensure the saturation stays within a realistic and healthy range
             newSaturationValue = Math.min(Math.max(newSaturationValue, 90), 100);
             lastSaturationValues[patientId] = newSaturationValue;
-            outputStrategy.output(patientId, System.currentTimeMillis(), "Saturation",
+            outputStrategy.output(patientId, System.currentTimeMillis(), RecordLabels.BLOOD_SATURATION,
                     Double.toString(newSaturationValue) + "%");
         } catch (Exception e) {
             System.err.println("An error occurred while generating blood saturation data for patient " + patientId);

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.alerts.Alert;
 import com.data_management.PatientRecord;
+import com.data_management.RecordLabels;
 import com.alerts.factory.AlertFactory;
 import com.alerts.factory.BloodPressureAlertFactory;
 
@@ -18,9 +19,6 @@ import com.alerts.factory.BloodPressureAlertFactory;
 public class BloodPressureStrategy implements AlertStrategy {
 
     private final AlertFactory factory = new BloodPressureAlertFactory();
-    private static final String SYSTOLIC_BP = "SystolicBloodPressure";
-    private static final String DIASTOLIC_BP = "DiastolicBloodPressure";
-
 
     @Override
     /**
@@ -32,8 +30,8 @@ public class BloodPressureStrategy implements AlertStrategy {
     public List<Alert> checkAlert(List<PatientRecord> records) {
 
         List<Alert> alerts = new ArrayList<>();
-        List<PatientRecord> systolicRecords = getRecordsByType(records, SYSTOLIC_BP);
-        List<PatientRecord> diastolicRecords = getRecordsByType(records, DIASTOLIC_BP);
+        List<PatientRecord> systolicRecords = getRecordsByType(records, RecordLabels.SYSTOLIC_BLOOD_PRESSURE);
+        List<PatientRecord> diastolicRecords = getRecordsByType(records, RecordLabels.DIASTOLIC_BLOOD_PRESSURE);
 
         alerts.addAll(evaluateBloodPressureThresholds(systolicRecords, true));
         alerts.addAll(evaluateBloodPressureThresholds(diastolicRecords, false));
@@ -142,7 +140,7 @@ public class BloodPressureStrategy implements AlertStrategy {
      */
     private List<PatientRecord> getRecordsByType(List<PatientRecord> records, String recordType) {
         return records.stream()
-                .filter(record -> record.getRecordType().equalsIgnoreCase(recordType))
+                .filter(record -> RecordLabels.normalize(record.getRecordType()).equals(recordType))
                 .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
                 .collect(Collectors.toList());
     }    

@@ -3,6 +3,7 @@ package com.cardioGenerator.generators;
 import java.util.Random;
 
 import com.cardioGenerator.outputs.OutputStrategy;
+import com.data_management.RecordLabels;
 
 public class BloodPressureDataGenerator implements PatientDataGenerator {
     private static final Random random = new Random();
@@ -34,9 +35,9 @@ public class BloodPressureDataGenerator implements PatientDataGenerator {
             lastSystolicValues[patientId] = newSystolicValue;
             lastDiastolicValues[patientId] = newDiastolicValue;
 
-            outputStrategy.output(patientId, System.currentTimeMillis(), "SystolicPressure",
+            outputStrategy.output(patientId, System.currentTimeMillis(), RecordLabels.SYSTOLIC_BLOOD_PRESSURE,
                     Double.toString(newSystolicValue));
-            outputStrategy.output(patientId, System.currentTimeMillis(), "DiastolicPressure",
+            outputStrategy.output(patientId, System.currentTimeMillis(), RecordLabels.DIASTOLIC_BLOOD_PRESSURE,
                     Double.toString(newDiastolicValue));
         } catch (Exception e) {
             System.err.println("An error occurred while generating blood pressure data for patient " + patientId);

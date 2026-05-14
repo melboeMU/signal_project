@@ -1,6 +1,8 @@
 package com.data_management;
 
 import java.util.ArrayList;
+import java.io.IOException; 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
@@ -98,27 +100,52 @@ public class DataStorage {
 
     /**
      * The main method for the DataStorage class.
-     * Initializes the system, reads data into storage, and continuously monitors
-     * and evaluates patient data.
+     * This method now accepts an input directory, reads patient records from files,
+     * stores them in DataStorage, and evaluates alerts.
      * 
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        // DataReader is not defined in this scope, should be initialized appropriately.
-        // DataReader reader = new SomeDataReaderImplementation("path/to/data");
+
+        // validate command line argument
+        if (args.length != 1) {
+            System.err.println("Usage: java com.data_management.DataStorage <input-directory>");
+            System.err.println("Example: java com.data_management.DataStorage output");
+            return;
+        }
+        // read input directory from command line
+        Path inputDirectory = Path.of(args[0]);
+
         DataStorage storage = DataStorage.getInstance();
 
-        // Assuming the reader has been properly initialized and can read data into the
-        // storage
-        // reader.readData(storage);
+         // create FileDataReader using the input directory
+        DataReader reader = new FileDataReader(inputDirectory);
 
-        // Example of using DataStorage to retrieve and print records for a patient
-        List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
-        for (PatientRecord record : records) {
-            System.out.println("Record for Patient ID: " + record.getPatientId() +
-                    ", Type: " + record.getRecordType() +
-                    ", Data: " + record.getMeasurementValue() +
-                    ", Timestamp: " + record.getTimestamp());
+         try {
+            // CHANGED: actually read file data into DataStorage
+            reader.readData(storage);
+            System.out.println("Successfully loaded patient data from: " + inputDirectory);
+        } catch (IOException e) {
+            // CHANGED: stop program if file reading fails
+            System.err.println("Failed to read patient data: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+        
+        // print all loaded records instead of only hardcoding patient 1
+        for (Patient patient : storage.getAllPatients()) {
+            List<PatientRecord> records = storage.getRecords(
+                    patient.getPatientId(),
+                    Long.MIN_VALUE,
+                    Long.MAX_VALUE
+            );
+
+            for (PatientRecord record : records) {
+                System.out.println("Record for Patient ID: " + record.getPatientId()
+                        + ", Type: " + record.getRecordType()
+                        + ", Data: " + record.getMeasurementValue()
+                        + ", Timestamp: " + record.getTimestamp());
+            }
         }
 
         // Initialize the AlertGenerator with the storage

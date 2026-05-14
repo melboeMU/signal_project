@@ -9,6 +9,7 @@ import com.alerts.Alert;
 import com.alerts.factory.AlertFactory;
 import com.alerts.factory.ECGAlertFactory;
 import com.data_management.PatientRecord;
+import com.data_management.RecordLabels;
 
 /**
  * Strategy that monitors for abnormal heart rates. 
@@ -17,7 +18,6 @@ import com.data_management.PatientRecord;
  */
 public class HeartRateStrategy implements AlertStrategy{
 
-    private static final String ECG = "ECG";
     private static final int SLIDING_WINDOW_SIZE = 5;
 
     private final AlertFactory factory = new ECGAlertFactory();
@@ -32,7 +32,7 @@ public class HeartRateStrategy implements AlertStrategy{
     public List<Alert> checkAlert(List<PatientRecord> records) {
          List<Alert> alerts = new ArrayList<>();
 
-        List<PatientRecord> ecgRecords = getRecordsByType(records, ECG);
+        List<PatientRecord> ecgRecords = getRecordsByType(records, RecordLabels.ECG);
 
         if (ecgRecords.size() <= SLIDING_WINDOW_SIZE) {
             return alerts;
@@ -63,12 +63,12 @@ public class HeartRateStrategy implements AlertStrategy{
      * Filters patient records by record type and sorts them by timestamp.
      *
      * @param records    the list of patient records
-     * @param recordType the type of records to filter (e.g., "ECG")
+     * @param recordType the type of records to filter (e.g., RecordLabels.ECG)
      * @return a filtered and sorted list of patient records
      */
     private List<PatientRecord> getRecordsByType(List<PatientRecord> records, String recordType) {
         return records.stream()
-                .filter(record -> record.getRecordType().equalsIgnoreCase(recordType))
+                .filter(record -> RecordLabels.normalize(record.getRecordType()).equals(recordType))
                 .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
                 .collect(Collectors.toList());
     }

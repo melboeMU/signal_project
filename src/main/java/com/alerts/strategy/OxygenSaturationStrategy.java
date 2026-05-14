@@ -9,6 +9,7 @@ import com.alerts.Alert;
 import com.alerts.factory.AlertFactory;
 import com.alerts.factory.BloodOxygenAlertFactory;
 import com.data_management.PatientRecord;
+import com.data_management.RecordLabels;
 
 /**
  * Strategy for detecting abnormal oxygen saturation levels.
@@ -17,7 +18,6 @@ import com.data_management.PatientRecord;
  */
 public class OxygenSaturationStrategy implements AlertStrategy {
 
-    private static final String BLOOD_SATURATION = "BloodSaturation";
     private static final long TEN_MINUTES_IN_MILLIS = 10 * 60 * 1000;
 
     private final AlertFactory factory = new BloodOxygenAlertFactory();
@@ -32,7 +32,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
     public List<Alert> checkAlert(List<PatientRecord> records) {
          List<Alert> alerts = new ArrayList<>();
 
-        List<PatientRecord> saturationRecords = getRecordsByType(records, BLOOD_SATURATION);
+        List<PatientRecord> saturationRecords = getRecordsByType(records, RecordLabels.BLOOD_SATURATION);
 
         for (PatientRecord record : saturationRecords) {
             if (record.getMeasurementValue() < 92) {
@@ -76,7 +76,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
      */
     private List<PatientRecord> getRecordsByType(List<PatientRecord> records, String recordType) {
         return records.stream()
-                .filter(record -> record.getRecordType().equalsIgnoreCase(recordType))
+                .filter(record -> RecordLabels.normalize(record.getRecordType()).equals(recordType))
                 .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
                 .collect(Collectors.toList());
     }

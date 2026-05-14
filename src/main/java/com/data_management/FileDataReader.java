@@ -93,7 +93,7 @@ public class FileDataReader implements DataReader {
 
                 long timestamp = parseTimestamp(parts[0].trim());
                 int patientId = Integer.parseInt(parts[1].trim());
-                String recordType = parts[2].trim();
+                String recordType = RecordLabels.normalize(parts[2].trim());
                 double measurementValue = Double.parseDouble(parts[3].trim());
 
                 if (recordType.isEmpty()) {

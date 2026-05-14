@@ -27,6 +27,9 @@ public class FileOutputStrategy implements OutputStrategy {
      * @throws NullPointerException if {@code baseDirectory} is {@code null}
      */
     public FileOutputStrategy(String baseDirectory) {
+        if (baseDirectory == null) { // CHANGED: added null validation
+            throw new NullPointerException("baseDirectory must not be null");
+        }
         //change to lowerCamelCase style as in line 12 
         this.baseDirectory = baseDirectory;
     }
@@ -43,6 +46,13 @@ public class FileOutputStrategy implements OutputStrategy {
      */
     @Override
     public void output(int patientId, long timestamp, String label, String data) {
+        if (label == null) { // CHANGED: added null validation
+            throw new NullPointerException("label must not be null");
+        }
+
+        if (data == null) { // CHANGED: added null validation
+            throw new NullPointerException("data must not be null");
+        }
         try {
             // Create the directory
             // Changed BaseDirectory to baseDirectory to follow corrected field naming
@@ -67,7 +77,14 @@ public class FileOutputStrategy implements OutputStrategy {
                             Paths.get(filePath),//change name to lowerCamelCase
                             StandardOpenOption.CREATE, 
                             StandardOpenOption.APPEND))) {
-            out.printf("Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n", patientId, timestamp, label, data);
+                                out.printf(
+                                        "%d,%d,%s,%s%n",
+                                        timestamp,
+                                        patientId,
+                                        label,
+                                        data
+                                );
+                                
         } catch (Exception e) {
             System.err.println("Error writing to file " + filePath + ": " + e.getMessage());//change Filepath to lowerCamelCase
         }

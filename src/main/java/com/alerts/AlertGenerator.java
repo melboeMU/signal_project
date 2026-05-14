@@ -3,6 +3,7 @@ package com.alerts;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.data_management.PatientRecord;
+import com.data_management.RecordLabels;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,11 +21,6 @@ public class AlertGenerator {
      * Stores generated alerts so they can be verified in unit tests.
      */
     private final List<Alert> generatedAlerts = new ArrayList<>();
-    private static final String SYSTOLIC_BP = "SystolicBloodPressure";
-    private static final String DIASTOLIC_BP = "DiastolicBloodPressure";
-    private static final String BLOOD_SATURATION = "BloodSaturation";
-    private static final String ECG = "ECG";
-    private static final String TRIGGERED_ALERT = "TriggeredAlert";
 
     private static final long TEN_MINUTES_IN_MILLIS = 10 * 60 * 1000;
 
@@ -63,8 +59,8 @@ public class AlertGenerator {
     }
 
     private void evaluateBloodPressureAlerts(List<PatientRecord> records) {
-        List<PatientRecord> systolicRecords = getRecordsByType(records, SYSTOLIC_BP);
-        List<PatientRecord> diastolicRecords = getRecordsByType(records, DIASTOLIC_BP);
+        List<PatientRecord> systolicRecords = getRecordsByType(records, RecordLabels.SYSTOLIC_BLOOD_PRESSURE);
+        List<PatientRecord> diastolicRecords = getRecordsByType(records, RecordLabels.DIASTOLIC_BLOOD_PRESSURE);
 
         evaluateBloodPressureThresholds(systolicRecords, true);
         evaluateBloodPressureThresholds(diastolicRecords, false);
@@ -134,7 +130,7 @@ public class AlertGenerator {
     }
 
     private void evaluateBloodSaturationAlerts(List<PatientRecord> records) {
-        List<PatientRecord> saturationRecords = getRecordsByType(records, BLOOD_SATURATION);
+        List<PatientRecord> saturationRecords = getRecordsByType(records, RecordLabels.BLOOD_SATURATION);
 
         for (PatientRecord record : saturationRecords) {
             if (record.getMeasurementValue() < 92) {
@@ -169,8 +165,8 @@ public class AlertGenerator {
     }
 
     private void evaluateHypotensiveHypoxemiaAlert(List<PatientRecord> records) {
-        List<PatientRecord> systolicRecords = getRecordsByType(records, SYSTOLIC_BP);
-        List<PatientRecord> saturationRecords = getRecordsByType(records, BLOOD_SATURATION);
+        List<PatientRecord> systolicRecords = getRecordsByType(records, RecordLabels.SYSTOLIC_BLOOD_PRESSURE);
+        List<PatientRecord> saturationRecords = getRecordsByType(records, RecordLabels.BLOOD_SATURATION);
 
         for (PatientRecord systolicRecord : systolicRecords) {
             if (systolicRecord.getMeasurementValue() >= 90) {
@@ -194,7 +190,7 @@ public class AlertGenerator {
     }
 
     private void evaluateEcgAlerts(List<PatientRecord> records) {
-        List<PatientRecord> ecgRecords = getRecordsByType(records, ECG);
+        List<PatientRecord> ecgRecords = getRecordsByType(records, RecordLabels.ECG);
 
         int slidingWindowSize = 5;
 
@@ -228,7 +224,7 @@ public class AlertGenerator {
     }
 
     private void evaluateTriggeredAlerts(List<PatientRecord> records) {
-        List<PatientRecord> triggeredRecords = getRecordsByType(records, TRIGGERED_ALERT);
+        List<PatientRecord> triggeredRecords = getRecordsByType(records, RecordLabels.TRIGGERED_ALERT);
 
         for (PatientRecord record : triggeredRecords) {
             /*
@@ -248,7 +244,7 @@ public class AlertGenerator {
 
     private List<PatientRecord> getRecordsByType(List<PatientRecord> records, String recordType) {
         return records.stream()
-                .filter(record -> record.getRecordType().equalsIgnoreCase(recordType))
+                .filter(record -> RecordLabels.normalize(record.getRecordType()).equals(recordType))
                 .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
                 .collect(Collectors.toList());
     }
