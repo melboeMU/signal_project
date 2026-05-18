@@ -8,7 +8,7 @@ import com.alerts.Alert;
  * This can be used to indicate that an alert condition
  * has been detected multiple times over a period.
  */
-public class RepeatedAlertDecorater extends AlertDecorator {
+public class RepeatedAlertDecorator extends AlertDecorator {
 
     private final int repeatCount;
 
@@ -18,7 +18,7 @@ public class RepeatedAlertDecorater extends AlertDecorator {
      * @param alert the alert to decorate
      * @param repeatCount how many times the alert has been triggered
      */
-    public RepeatedAlertDecorater(Alert alert, int repeatCount) {
+    public RepeatedAlertDecorator(Alert alert, int repeatCount) {
         super(alert);
         this.repeatCount = repeatCount;
     }

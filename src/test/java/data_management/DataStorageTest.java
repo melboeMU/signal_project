@@ -108,4 +108,12 @@ class DataStorageTest {
 
         assertEquals(threadCount * recordsPerThread, records.size());
     }
+
+    @Test
+    void getInstanceShouldReturnSameObject() {
+        DataStorage firstInstance = DataStorage.getInstance();
+        DataStorage secondInstance = DataStorage.getInstance();
+
+        assertSame(firstInstance, secondInstance);
+    }
 }

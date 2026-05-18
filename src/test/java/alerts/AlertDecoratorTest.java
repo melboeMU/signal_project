@@ -8,7 +8,7 @@ import com.alerts.Alert;
 import org.junit.jupiter.api.Test;
 import com.alerts.decorator.AlertDecorator;
 import com.alerts.decorator.PriorityAlertDecorator; 
-import com.alerts.decorator.RepeatedAlertDecorater;
+import com.alerts.decorator.RepeatedAlertDecorator;
 
 /**
  * Tests the alert decorator classes.
@@ -55,8 +55,8 @@ class AlertDecoratorTest {
     void repeatedAlertDecoratorStoresRepeatCount() {
         Alert originalAlert = new Alert("3", "Abnormal ECG peak", 3000L);
 
-        RepeatedAlertDecorater decorator =
-                new RepeatedAlertDecorater(originalAlert, 3);
+        RepeatedAlertDecorator decorator =
+                new RepeatedAlertDecorator(originalAlert, 3);
 
         assertSame(originalAlert, decorator.getDecoratedAlert());
         assertEquals(3, decorator.getRepeatCount());
